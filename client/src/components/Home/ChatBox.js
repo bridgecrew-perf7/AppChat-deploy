@@ -90,18 +90,22 @@ const ChatBox = ({ friend }) => {
     if (file) {
       const formData = new FormData();
       formData.append('file', file);
-      dispatch(uploadMedia(formData)).then((res) => {
-        const resData = res.payload;
-        if (resData.success) {
-          const data = {
-            roomId: roomId,
-            userId: userId,
-            message: resData.data.filename,
-            type: resData.data.fileType,
-          };
-          socket.emit('send-message', data);
-        }
-      });
+      dispatch(uploadMedia(formData))
+        .then((res) => {
+          const resData = res.payload;
+          if (resData) {
+            if (resData.success) {
+              const data = {
+                roomId: roomId,
+                userId: userId,
+                message: resData.data.filename,
+                type: resData.data.fileType,
+              };
+              socket.emit('send-message', data);
+            }
+          }
+        })
+        .catch((error) => console.log(error));
     }
   };
 
