@@ -43,9 +43,7 @@ const Verify = () => {
       'recaptcha-container',
       {
         size: 'invisible',
-        callback: function (response) {
-          console.log('Captcha Resolved');
-        },
+        callback: function (response) {},
       }
     );
   };
@@ -54,7 +52,6 @@ const Verify = () => {
     setLabel(new Notify('Loading.....').Loading());
     setUpRecaptcha();
     let phoneNumber = '+84' + parseInt(phone);
-    console.log(phoneNumber);
     let appVerifier = window.recaptchaVerifier;
     firebase
       .auth()
@@ -62,7 +59,6 @@ const Verify = () => {
       .then(function (confirmationResult) {
         setLabel(new Notify('OTP has been sent ✓').OTPsent());
         window.confirmationResult = confirmationResult;
-        console.log('OTP is sent');
       })
       .catch(function (error) {
         console.log(error);
@@ -90,12 +86,9 @@ const Verify = () => {
     optConfirm
       .confirm(otpInput)
       .then(function (result) {
-        // let userFirebase = result.user; console.log(userFirebase);
         if (user) {
-          // Todo: register user here
           dispatch(registerUser(user))
             .then((res) => {
-              // k ton tai gia tri success neu loi nen dung .payload
               if (res.payload) {
                 return history.replace('/login');
               } else {
