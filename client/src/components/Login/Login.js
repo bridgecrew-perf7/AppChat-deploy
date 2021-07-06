@@ -27,7 +27,9 @@ const Login = () => {
       dispatch(loginUser(user))
         .then((res) => {
           if (res.payload) {
-            dispatch(getUser());
+            if (res.payload.success) {
+              dispatch(getUser());
+            }
             setPhone('');
             setPassword('');
             setLabel(new Notify(''));
