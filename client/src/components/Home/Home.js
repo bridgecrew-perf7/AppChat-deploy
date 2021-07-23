@@ -8,6 +8,7 @@ import {
 } from '../../store/reducers/friendSlice';
 import { setAuth } from '../../store/reducers/userSlice';
 import notifi from './image/notifi.png';
+import loading2 from './image/Loading2.gif';
 import ChatBox from './ChatBox';
 import AddFriend from './AddFriend';
 import Account from './Account';
@@ -20,6 +21,7 @@ const overlay_2 = 'overlay-2';
 const Home = () => {
   const user = useSelector((state) => state.userReducer.user);
   const friends = useSelector((state) => state.friendReducer.friends);
+  const loadFriend = useSelector((state) => state.friendReducer.friends);
   const numberOfFriends = friends.length;
   const [type, setType] = useState(null);
   const [friend, setFriend] = useState(null);
@@ -150,15 +152,23 @@ const Home = () => {
             ) : (
               <>
                 <div className="no-friend">
-                  <PersonAddIcon
-                    onClick={handleModalAddFriend}
-                    style={{
-                      color: 'white',
-                      fontSize: '60px',
-                      cursor: 'pointer',
-                    }}
-                  />
-                  <i>No friend</i>
+                  {loadFriend ? (
+                    <>
+                      <img className="load-friend" src={loading2} />
+                    </>
+                  ) : (
+                    <>
+                      <PersonAddIcon
+                        onClick={handleModalAddFriend}
+                        style={{
+                          color: 'white',
+                          fontSize: '60px',
+                          cursor: 'pointer',
+                        }}
+                      />
+                      <i>No friend</i>{' '}
+                    </>
+                  )}
                 </div>
               </>
             )}

@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { serverUrl } from '../../config/axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { pushMessage } from '../../store/reducers/friendSlice';
+import {
+  pushMessage,
+  unshiftMessage,
+  filterMessage,
+} from '../../store/reducers/friendSlice';
 import { uploadMedia } from '../../store/reducers/uploadSlice';
+import loading2 from './image/Loading2.gif';
+import loading3 from './image/Loading3.gif';
 import MoodIcon from '@material-ui/icons/Mood';
 import CloseIcon from '@material-ui/icons/Close';
 import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined';
@@ -15,6 +21,7 @@ const ChatBox = ({ friend }) => {
   const [openEmoji, setOpenEmoji] = useState(false);
   const [previewImg, setPreviewImg] = useState(false);
   const messages = useSelector((state) => state.friendReducer.messages);
+  const loadMessage = useSelector((state) => state.friendReducer.loadMessage);
   const user = useSelector((state) => state.userReducer.user);
   const userId = String(user._id);
   const roomId = friend._id;
@@ -90,11 +97,18 @@ const ChatBox = ({ friend }) => {
     if (file) {
       const formData = new FormData();
       formData.append('file', file);
+      const loadData = {
+        sender: userId,
+        message: `${file.name}-loading`,
+        type: 'loading',
+      };
+      dispatch(unshiftMessage(loadData));
       dispatch(uploadMedia(formData))
         .then((res) => {
           const resData = res.payload;
           if (resData) {
             if (resData.success) {
+              dispatch(filterMessage(loadData.message));
               const data = {
                 roomId: roomId,
                 userId: userId,
@@ -122,6 +136,8 @@ const ChatBox = ({ friend }) => {
       <div key={index} className="message-row you-message">
         {item.type === 'text' ? (
           <div className="message-text">{item.message}</div>
+        ) : item.type === 'loading' ? (
+          <img className="message-image" src={loading3} alt="image" />
         ) : item.type === 'video/mp4' ? (
           <video
             className="message-video"
@@ -134,7 +150,7 @@ const ChatBox = ({ friend }) => {
           <img
             className="message-image"
             src={apiUrl + item.message}
-            alt="img"
+            alt="image"
             onClick={handlePreviewImg.bind(this, apiUrl + item.message)}
           />
         )}
@@ -155,7 +171,7 @@ const ChatBox = ({ friend }) => {
           <img
             className="message-image"
             src={apiUrl + item.message}
-            alt="img"
+            alt="image"
             onClick={handlePreviewImg.bind(this, apiUrl + item.message)}
           />
         )}
@@ -191,8 +207,10 @@ const ChatBox = ({ friend }) => {
       </div>
 
       <div className="chat-message-list">
-        {existMess === 0 ? (
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
+        {loadMessage ? (
+          <img className="load-message" src={loading2} />
+        ) : existMess === 0 ? (
+          <div className="chat-message-status">
             <div className="message-text">
               <i style={{ color: 'gray' }}>No message here!</i>
             </div>

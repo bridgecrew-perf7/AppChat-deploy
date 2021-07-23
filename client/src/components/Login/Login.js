@@ -14,6 +14,7 @@ const Login = () => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [label, setLabel] = useState(new Notify(''));
+  const [loading, setLoading] = useState(false)
   const dispatch = useDispatch();
 
   const getPhone = (e) => setPhone(e.target.value);
@@ -24,16 +25,18 @@ const Login = () => {
       return setLabel(new Notify('Please fill out the form'));
     } else if (isVietnamesePhoneNumber(phone)) {
       let user = new User(phone, password);
+      setLoading(true)
       dispatch(loginUser(user))
         .then((res) => {
           if (res.payload) {
             if (res.payload.success) {
               dispatch(getUser());
+            } else {
+              setLoading(false)
+              setLabel(new Notify('Incorrect phone number or password'));
             }
-            setPhone('');
-            setPassword('');
-            setLabel(new Notify(''));
           } else {
+            setLoading(false)
             setLabel(new Notify('Incorrect phone number or password'));
           }
         })
@@ -79,9 +82,10 @@ const Login = () => {
           variant="contained"
           color="primary"
           className={classes.button}
+          disabled={loading}
           fullWidth
         >
-          SIGN IN
+          {loading ? 'SIGN IN...' : 'SIGN IN'}
         </Button>
         <Grid container>
           <Grid item xs>

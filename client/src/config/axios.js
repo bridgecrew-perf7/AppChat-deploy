@@ -4,7 +4,7 @@ export const serverUrl = 'https://appchat-connect-server.herokuapp.com';
 
 const instanceAxios = axios.create({
   baseURL: serverUrl,
-  timeout: 2000,
+  timeout: 100000,
 });
 
 export const setAuthToken = (token) => {

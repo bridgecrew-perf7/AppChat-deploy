@@ -77,6 +77,11 @@
   align-items: center;
 }
 
+.load-friend {
+  width: 50px;
+  height: 50px;
+}
+
 .no-friend i {
   color: white;
   font-size: 1rem;
@@ -290,6 +295,18 @@
   padding: 0 20px;
   border-right: 1px solid rgba(140, 140, 140, 0.25);
   overflow-y: scroll;
+}
+
+.chat-message-status {
+  display: flex;
+  justify-content: center;
+}
+
+.load-message {
+  width: 50px;
+  height: 50px;
+  align-self: center;
+  margin-bottom: 20px;
 }
 
 .message-row {

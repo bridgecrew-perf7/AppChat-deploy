@@ -68,10 +68,18 @@ const friendSlice = createSlice({
   initialState: {
     friends: [],
     messages: [],
+    loadFriend: true,
+    loadMessage: true,
   },
   reducers: {
     pushMessage(state, action) {
       state.messages = action.payload.reverse();
+    },
+    unshiftMessage(state, action) {
+      state.messages.unshift(action.payload);
+    },
+    filterMessage(state, action) {
+      state.messages.filter((item) => item.message !== action.payload);
     },
   },
   extraReducers: {
@@ -82,14 +90,16 @@ const friendSlice = createSlice({
     [getListFriend.fulfilled]: (state, action) => {
       if (action.payload) {
         if (action.payload.success) {
+          state.loadFriend = false;
           state.friends = action.payload.data;
         }
       }
     },
-    
+
     [getListMessage.fulfilled]: (state, action) => {
       if (action.payload) {
         if (action.payload.success) {
+          state.loadMessage = false;
           state.messages = action.payload.data.messages.reverse();
         } else {
           console.log('Get client fail!');
@@ -101,6 +111,7 @@ const friendSlice = createSlice({
 
 const friendReducer = friendSlice.reducer;
 
-export const { pushMessage } = friendSlice.actions;
+export const { pushMessage, unshiftMessage, filterMessage } =
+  friendSlice.actions;
 
 export default friendReducer;

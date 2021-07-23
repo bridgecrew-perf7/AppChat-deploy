@@ -12,7 +12,7 @@ export const uploadAvatar = createAsyncThunk(
       const res = await instanceAxios.post('/upload/avatar', formData);
       return res.data;
     } catch (error) {
-      localStorage.removeItem(keyStorage);
+      if (error) throw error;
     }
   }
 );
@@ -27,7 +27,7 @@ export const uploadMedia = createAsyncThunk(
       const res = await instanceAxios.post('/upload/media', formData);
       return res.data;
     } catch (error) {
-      localStorage.removeItem(keyStorage);
+      if (error) throw error;
     }
   }
 );
@@ -37,8 +37,12 @@ const uploadSlice = createSlice({
   initialState: {},
   reducers: {},
   extraReducers: {
-    [uploadAvatar.fulfilled]: (state, action) => {},
-    [uploadMedia.fulfilled]: (state, action) => {},
+    [uploadAvatar.fulfilled]: (state, action) => {
+      if (!action.payload.success) return localStorage.removeItem(keyStorage);
+    },
+    [uploadMedia.fulfilled]: (state, action) => {
+      if (!action.payload.success) return localStorage.removeItem(keyStorage);
+    },
   },
 });
 

@@ -4,8 +4,8 @@ import Home from '../Home/Home';
 import { useSelector } from 'react-redux';
 
 const Protect = () => {
-  const isAuthenticated = useSelector(
-    (state) => state.userReducer.isAuthenticated
+  const { isAuthenticated } = useSelector(
+    (state) => state.userReducer
   );
 
   return (
